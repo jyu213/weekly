@@ -32,6 +32,12 @@ let jade = new Jade({
 
 router.get('/index', index.index);
 
+/** 
+ * API 
+ */
+let weeklyAPI = require('./api/weekly');
+router.get('/service/get-weekly-list', weeklyAPI.list);
+
 app.use(router.routes());
 app.use(staticServer(path.join(__dirname + '/static')));
 

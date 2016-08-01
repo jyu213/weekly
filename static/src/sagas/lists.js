@@ -1,35 +1,36 @@
 import { takeLatest } from 'redux-saga';
 import { take, call, put, fork, cancel } from 'redux-saga/effects';
-import { getAll } from '../services/todos';
+import { getAll } from '../services/lists';
 import { message } from 'antd';
 
-function* getTodos() {
+function* getLists() {
   try {
     const { jsonResult } = yield call(getAll);
     if (jsonResult.data) {
+      console.log('get data success')
       yield put({
-        type: 'todos/get/success',
+        type: 'lists/get/success',
         payload: jsonResult.data,
       });
     }
   } catch (err) {
     message.error(err);
     //yield put({
-    //  type: 'todos/get/failed',
+    //  type: 'lists/get/failed',
     //  err,
     //});
   }
 }
 
-function* watchTodosGet() {
-  yield takeLatest('todos/get', getTodos)
+function* watchListsGet() {
+  yield takeLatest('lists/get', getLists)
 }
 
 export default function* () {
-  yield fork(watchTodosGet);
+  yield fork(watchListsGet);
 
-  // Load todos.
+  // Load lists.
   yield put({
-    type: 'todos/get',
+    type: 'lists/get',
   });
 }

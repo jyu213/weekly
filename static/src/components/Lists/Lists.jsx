@@ -44,42 +44,42 @@ const columns = [{
 }];
 
 // TEST DATA
-const data = [{
-  key: '1',
-  title: '胡彦斌',
-  subPorject: '32XX',
-  description: '西湖区湖底公园1号',
-}, {
-  key: '2',
-  title: '胡彦祖',
-  subPorject: '42XX',
-  description: '西湖区湖底公园1号',
-}, {
-  key: '3',
-  title: '李大嘴',
-  subPorject: '32XX',
-  description: '西湖区湖底公园1号',
-}];
+// const data = [{
+//   key: '1',
+//   title: '胡彦斌',
+//   subPorject: '32XX',
+//   description: '西湖区湖底公园1号',
+// }, {
+//   key: '2',
+//   title: '胡彦祖',
+//   subPorject: '42XX',
+//   description: '西湖区湖底公园1号',
+// }, {
+//   key: '3',
+//   title: '李大嘴',
+//   subPorject: '32XX',
+//   description: '西湖区湖底公园1号',
+// }];
 
 const pagination = {
-  total: data.length,
-  showSizeChanger: true,
-  onShowSizeChange(current, pageSize) {
-    console.log('Current: ', current, '; PageSize: ', pageSize);
-  },
-  onChange(current) {
-    console.log('Current: ', current);
-  },
+  // total: data.length,
+  // showSizeChanger: true,
+  // onShowSizeChange(current, pageSize) {
+  //   console.log('Current: ', current, '; PageSize: ', pageSize);
+  // },
+  // onChange(current) {
+  //   console.log('Current: ', current);
+  // },
 };
 
 
-const Lists = ({ todos, dispatch }) => {
+const Lists = ({ lists, dispatch }) => {
   return (
     <div className={styles.main}>
       <div className={`${styles.searchFilter} clearfix`}>
         <div className="pull-left">
           <label className={styles.filterLabel}>筛选日期: <RangePicker style={{ width: 184 }} onChange={onChange} /></label>
-          <label className={styles.filterLabel}><Input placeholder="基本使用" style={{ width: 160 }}/></label>
+          <label className={styles.filterLabel}><Input placeholder="基本使用" style={{ width: 160 }} /></label>
           <label className={styles.filterLabel}>只显示自己: <Switch defaultChecked={false} onChange={onChange1} /></label>
         </div>
         <div className="pull-right">
@@ -87,7 +87,7 @@ const Lists = ({ todos, dispatch }) => {
         </div>
       </div>
       <div className={styles.list}>
-        <Table columns={columns} dataSource={data} pagination={pagination} />
+        <Table columns={columns} dataSource={lists.list} pagination={pagination} />
       </div>
     </div>
   );
@@ -95,24 +95,18 @@ const Lists = ({ todos, dispatch }) => {
 
 Lists.propTypes = {};
 
-function filter(todos, pathname) {
-  const newList = todos.list.filter(todo => {
-    if (pathname === '/actived') {
-      return !todo.isComplete;
-    }
-    if (pathname === '/completed') {
-      return todo.isComplete;
-    }
+function filter(lists, pathname) {
+  const newList = lists.list.filter(list => {
     return true;
   });
-  return { ...todos, list: newList };
+  return { ...lists, list: newList };
 }
 
-function mapStateToProps({ todos }, { location }) {
+function mapStateToProps({ lists }, { location }) {
   return {
-    todos: filter(todos, location.pathname),
+    lists: lists
   };
 }
 
-export default Lists;
-// export default connect(mapStateToProps)(Lists);
+// export default Lists;
+export default connect(mapStateToProps)(Lists);

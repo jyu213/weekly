@@ -1,9 +1,11 @@
 'use strict';
 
+const CONSTANT = require('../config/constant');
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database('db/weekly');
+const db = new sqlite3.Database(CONSTANT.DBPATH);
 
 const WEEKLY_LIST_TABLE = 'weekly_list';
+
 
 db.serialize(function() {
     db.run(`CREATE TABLE IF NOT EXISTS ${WEEKLY_LIST_TABLE} (ID INTEGER PRIMARY KEY, userId TEXT, project_create_date TEXT, project_progress TEXT, project_title TEXT, project_link TEXT, description TEXT, createTime TEXT, modifyTime TEXT)`);

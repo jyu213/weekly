@@ -2,25 +2,26 @@
 // - https://github.com/dora-js/dora-plugin-proxy#规则定义
 
 module.exports = {
-  '/api/todos': function(req, res) {
+  '/api/lists': function(req, res) {
     setTimeout(function() {
       res.json({
         success: true,
-        data: [
-          {
-            id: 1,
-            text: 'Learn antd',
-            isComplete: true,
-          },
-          {
-            id: 2,
-            text: 'Learn ant-tool',
-          },
-          {
-            id: 3,
-            text: 'Learn dora',
-          },
-        ],
+        data: [{
+            id: '1',
+            title: '胡彦斌',
+            subPorject: '32XX',
+            description: '西湖区湖底公园1号',
+          }, {
+            id: '2',
+            title: '胡彦祖',
+            subPorject: '42XX',
+            description: '西湖区湖底公园1号',
+          }, {
+            id: '3',
+            title: '李大嘴',
+            subPorject: '32XX',
+            description: '西湖区湖底公园1号',
+          }],
       });
     }, 500);
   },
