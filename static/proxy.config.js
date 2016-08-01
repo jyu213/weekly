@@ -2,6 +2,7 @@
 // - https://github.com/dora-js/dora-plugin-proxy#规则定义
 
 module.exports = {
+  'GET /service/*': 'http://127.0.0.1:3000/',
   '/api/lists': function(req, res) {
     setTimeout(function() {
       res.json({

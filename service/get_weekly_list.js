@@ -1,24 +1,28 @@
 'use strict';
 
 const CONSTANT = require('../config/constant');
+const WEEKLY_LIST_TABLE = 'weekly_list';
+const GET_LIST_SQL = `SELECT * FROM ${WEEKLY_LIST_TABLE}`;
 
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(CONSTANT.DBPATH);
 
-const WEEKLY_LIST_TABLE = 'weekly_list';
-
+/*
+ * @Service: get weekly list
+ */
 exports.list = function *() {
-    db.serialize(function() {
-        // @TODO: pager 
-        const getListSql = `SELECT * FROM ${WEEKLY_LIST_TABLE}`;
-        db.all(getListSql, (err, rows) => {
-            console.log(err, rows);
-            if (err) {
-                // yield
-            }
-            yield rows;
+    let promise = new Promise((resolve, reject) => {
+        let result = [];
+        db.serialize(() => {
+            // @TODO: pager
+            db.all(GET_LIST_SQL, (err, rows) => {
+                if (err) {
+                    reject([]);
+                }
+                resolve(rows);
+            });
         });
-    });
+    })
 
-    db.close();
+    return promise;
 };

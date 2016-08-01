@@ -6,6 +6,8 @@ import { message } from 'antd';
 function* getLists() {
   try {
     const { jsonResult } = yield call(getAll);
+
+    // console.log(jsonResult, 'jsonResult')
     if (jsonResult.data) {
       console.log('get data success')
       yield put({
@@ -14,7 +16,8 @@ function* getLists() {
       });
     }
   } catch (err) {
-    message.error(err);
+    console.log(err, arguments)
+    // message.error(err);
     //yield put({
     //  type: 'lists/get/failed',
     //  err,
