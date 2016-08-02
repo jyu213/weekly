@@ -17,9 +17,27 @@ exports.list = function *() {
             // @TODO: pager
             db.all(GET_LIST_SQL, (err, rows) => {
                 if (err) {
+                    // @TODO: echo error message
                     reject([]);
                 }
-                resolve(rows);
+
+                let data = rows.map((item) => {
+                    return {
+                        id: item.ID,
+                        user_id: item.USER_ID,
+                        title: item.PROJECT_TITLE,
+                        date: item.PROJECT_CREATE_DATE,
+                        progress: item.PROJECT_PROGRESS,
+                        tag: item.PROJECT_TAG,
+                        next_week_plan: item.NEXT_WEEK_PLAN, 
+                        link: item.PROJECT_LINK,
+                        description: item.DESCRIPTION,
+                        sub_project: item.SUB_PROJECT,
+                        create_time: item.CREATE_TIME,
+                        update_time: item.UPDATE_TIME
+                    };
+                }) || [];
+                resolve(data);
             });
         });
     })
