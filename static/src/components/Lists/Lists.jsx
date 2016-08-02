@@ -6,15 +6,6 @@ import styles from './Lists.less';
 
 const RangePicker = DatePicker.RangePicker;
 
-function onChange(value, dateString) {
-    console.log('From: ', value[0], ', to: ', value[1]);
-    console.log('From: ', dateString[0], ', to: ', dateString[1]);
-}
-
-function onChange1(checked) {
-    console.log(`switch to ${checked}`);
-}
-
 /**
  * 列表字段信息
  */
@@ -60,33 +51,70 @@ const columns = [{
 }];
 
 const Lists = ({ lists, dispatch }) => {
-    let data = lists.list;
-    
+    const { loading, filter } = lists;
+    const data = lists.list;
+
     const pagination = {
         total: data.length,
-        showSizeChanger: true,
-        onShowSizeChange(current, pageSize) {
-            console.log('Current: ', current, '; PageSize: ', pageSize);
+        showTotal: total => `共 ${data.length} 条`,
+        pageSize: 1,
+        defaultCurrent: 1,
+        showQuickJumper: true,
+        onChange(page) {
+            dispatch({
+                // type: 'filter/page',
+                type: 'lists/get',
+                payload: {
+                    page: page
+                }
+            });
         },
-        onChange(current) {
-            console.log('Current: ', current);
-        },
+    };
+
+    const onDateChange = (value, dateString) => {
+        dispatch({
+            // type: 'filter/date',
+            type: 'lists/get',
+            payload: {
+                startTime: dateString[0],
+                endTime: dateString[1]
+            }
+        });
+    };
+    const onMyChange = (checked) => {
+        dispatch({
+            // type: 'filter/onlyMe',
+            type: 'lists/get',
+            payload: {
+                onlyMe: checked
+            }
+        });
     };
 
     return (
         <div className={styles.main}>
             <div className={`${styles.searchFilter} clearfix`}>
                 <div className="pull-left">
-                    <label className={styles.filterLabel}>筛选日期: <RangePicker style={{ width: 184 }} onChange={onChange} /></label>
-                    <label className={styles.filterLabel}><Input placeholder="基本使用" style={{ width: 160 }} /></label>
-                    <label className={styles.filterLabel}>只显示自己: <Switch defaultChecked={false} onChange={onChange1} /></label>
+                    <label className={styles.filterLabel}>
+                        筛选日期: <RangePicker style={{ width: 184 }} onChange={onDateChange} />
+                    </label>
+                    <label className={styles.filterLabel}>
+                        <Input placeholder="基本使用" style={{ width: 160 }} />
+                    </label>
+                    <label className={styles.filterLabel}>
+                        只显示自己: <Switch defaultChecked={false} onChange={onMyChange} />
+                    </label>
                 </div>
                 <div className="pull-right">
                     <Button type="primary" icon="search">搜索</Button>
                 </div>
             </div>
             <div className={styles.list}>
-                <Table columns={columns} dataSource={lists.list} pagination={pagination} />
+                <Table columns={columns}
+                       dataSource={lists.list}
+                       loading={loading}
+                       pagination={pagination}
+                />
             </div>
         </div>
     );
@@ -94,18 +122,14 @@ const Lists = ({ lists, dispatch }) => {
 
 Lists.propTypes = {};
 
-function filter(lists, pathname) {
-    const newList = lists.list.filter(list => {
-        return true;
-    });
-    return { ...lists, list: newList };
-}
-
-function mapStateToProps({ lists }, { location }) {
+function mapStateToProps({ lists, loading, filter }) {
     return {
-        lists: lists
+        lists,
+        loading,
+        filter
     };
 }
 
 // export default Lists;
 export default connect(mapStateToProps)(Lists);
+

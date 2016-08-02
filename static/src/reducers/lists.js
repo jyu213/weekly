@@ -2,15 +2,35 @@ import { handleActions } from 'redux-actions';
 import { combineReducer } from 'redux';
 
 const lists = handleActions({
-  ['lists/get'](state) {
-    return { ...state, loading: true };
-  },
-  ['lists/get/success'](state, action) {
-    return { ...state, list: action.payload, loading: false };
-  },
-  ['lists/get/failed'](state, action) {
-    return { ...state, err: action.err, loading: false };
-  },
+    ['lists/get'](state, action) {
+        const { startTime, endTime, onlyMe, page } = action;
+
+        return { ...state, loading: true, filter: Object.assign({}, ...state.filter, { onlyMe }) };
+    },
+    ['lists/get/success'](state, action) {
+        return { ...state, list: action.payload, loading: false };
+    },
+    ['lists/get/failed'](state, action) {
+        return { ...state, err: action.err, loading: false };
+    },
+    // ['filter/date'](state, action) {
+    //     const { startTime, endTime } = action.payload;
+
+    //     return { ...state, filter: Object.assign({}, ...state.filter, {
+    //         startTime,
+    //         endTime
+    //     })};
+    // },
+    // ['filter/onlyMe'](state, action) {
+    //     const { onlyMe } = action.payload;
+    //     return { ...state, filter: Object.assign({}, ...state.filter, { onlyMe })};
+    // },
+    // ['filter/page'](state, action) {
+    //     const { page } = action.payload;
+    //     return { ...state, filter: Object.assign({}, ...state.filter, { page })};
+    // }
+
+
 //   ['lists/delete'](state, action) {
 //     const id = action.payload;
 //     const newList = state.list.filter(todo => todo.id !== id);
@@ -38,8 +58,9 @@ const lists = handleActions({
 //     return { ...state, list: newList, };
 //   },
 }, {
-  list: [],
-  loading: false,
+      list: [],
+      filter: {},
+      loading: false,
 });
 
 export default lists;
