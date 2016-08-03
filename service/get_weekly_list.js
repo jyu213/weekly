@@ -2,20 +2,45 @@
 
 const CONSTANT = require('../config/constant');
 const WEEKLY_LIST_TABLE = 'weekly_list';
-const GET_LIST_SQL = `SELECT * FROM ${WEEKLY_LIST_TABLE}`;
+// const GET_LIST_SQL = `SELECT * FROM ${WEEKLY_LIST_TABLE} ORDER BY UPDATE_TIME`;
 
+const moment = require('moment');
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(CONSTANT.DBPATH);
 
 /*
  * @Service: get weekly list
  */
-exports.list = function *() {
+exports.list = function *(params) {
+    let sql, 
+        sqlArr = [];
+    for (let key in params) {
+        switch (key) {
+            case 'onlyMe':
+                params[key] && sqlArr.push(`USER_ID='01'`);
+                break;
+            case 'startTime':
+                let val = +moment(params[key]) || params[key];
+                console.log(val);
+                sqlArr.push(`PROJECT_CREATE_DATE > ${val}`);
+                break;
+            case 'endTime':
+                let val = +moment(params[key]) || params[key];
+                sqlArr.push(`PROJECT_CREATE_DATE < ${val}`);
+                break;
+            case 'content':
+                // @TODO: error
+                sqlArr.push(`DESCRIPTION LIKE ${params[key]}`);
+                break;
+        }
+    }
+    sql = `SELECT * FROM ${WEEKLY_LIST_TABLE} ${sqlArr.length > 0 && 'WHERE ' + sqlArr.join(' AND ')} ORDER BY UPDATE_TIME`;
+    
     let promise = new Promise((resolve, reject) => {
         let result = [];
         db.serialize(() => {
             // @TODO: pager
-            db.all(GET_LIST_SQL, (err, rows) => {
+            db.all(sql, (err, rows) => {
                 if (err) {
                     // @TODO: echo error message
                     reject([]);
@@ -40,7 +65,7 @@ exports.list = function *() {
                 resolve(data);
             });
         });
-    })
+    });
 
     return promise;
 };

@@ -3,9 +3,9 @@ import { combineReducer } from 'redux';
 
 const lists = handleActions({
     ['lists/get'](state, action) {
-        const { startTime, endTime, onlyMe, page } = action;
-
-        return { ...state, loading: true, filter: Object.assign({}, ...state.filter, { onlyMe }) };
+        // const { startTime, endTime, onlyMe, page = 1 } = action;
+        // console.log(startTime, endTime, onlyMe, page)
+        return { ...state, loading: true, filter: Object.assign({}, ...state.filter, action.payload) };
     },
     ['lists/get/success'](state, action) {
         return { ...state, list: action.payload, loading: false };
