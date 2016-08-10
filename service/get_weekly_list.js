@@ -15,17 +15,18 @@ exports.list = function *(params) {
     let sql, 
         sqlArr = [];
     for (let key in params) {
+        let val;
         switch (key) {
             case 'onlyMe':
                 params[key] && sqlArr.push(`USER_ID='01'`);
                 break;
             case 'startTime':
-                let val = +moment(params[key]) || params[key];
+                val = +moment(params[key]) || params[key];
                 console.log(val);
                 sqlArr.push(`PROJECT_CREATE_DATE > ${val}`);
                 break;
             case 'endTime':
-                let val = +moment(params[key]) || params[key];
+                val = +moment(params[key]) || params[key];
                 sqlArr.push(`PROJECT_CREATE_DATE < ${val}`);
                 break;
             case 'content':
